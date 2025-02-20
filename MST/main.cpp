@@ -15,12 +15,6 @@
 //	return 0;
 //}
 
-
-#include <iostream>
-#include <fstream>
-#include "instance.h"
-#include "solver.h"
-
 #include <iostream>
 #include <fstream>
 #include <chrono>
