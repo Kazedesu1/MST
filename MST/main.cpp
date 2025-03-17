@@ -32,9 +32,9 @@ int main() {
     outputFile << "Filename,Obj,runtime\n";
 
     for (int i = 1; i <= 20; ++i) {
-        std::string filename = "data/" + std::to_string(i) + ".csv";
+        std::string filename = "datanetwork200/network_nodes_" + std::to_string(i) + ".csv";
         INSTANCE instance;
-        if (!instance.loadFromFile(filename)) {
+        if (!instance.loadFromfilenetwork(filename)) {
             std::cerr << "Failed to load file: " << filename << std::endl;
             continue;
         }

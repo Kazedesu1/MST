@@ -10,6 +10,8 @@ public:
     Prim(const INSTANCE& instance);
     void solve();
     void displaySolution() const;
+    double runtime;
+    double total = 0;
 
     INSTANCE instance;
     std::vector<Edge> mstree;
@@ -20,12 +22,12 @@ public:
     Kruskal(const INSTANCE& instance);
     void solve();
     void displaySolution() const;
-	double runtime;
-	double total = 0;
+    double runtime;
+    double total = 0;
     int find(vector<int>& parent, int i) const;
     void unionSet(vector<int>& parent, vector<int>& rank, int x, int y) const;
-	const INSTANCE& instance;
-	std::vector<Edge> mstree;
+    const INSTANCE& instance;
+    std::vector<Edge> mstree;
 };
 
 #endif // SOLVER_H
