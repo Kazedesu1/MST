@@ -1,4 +1,4 @@
-﻿#include "solver.h"
+#include "solver.h"
 #include <iostream>
 #include <algorithm>
 #include <chrono>
@@ -12,68 +12,59 @@ Kruskal::Kruskal(const INSTANCE& instance) : instance(instance) {};
 
 void Prim::solve()
 {
-    auto start = chrono::high_resolution_clock::now();
     int n = instance.numnodes;
-    // Khởi tạo vector kiểm tra xem đỉnh đã được thêm vào MST hay chưa
     vector<bool> inMST(n, false);
-
-    // Xây dựng danh sách kề từ danh sách cạnh (chú ý chuyển đổi chỉ số: dữ liệu đầu vào có thể bắt đầu từ 1)
+    vector<double> key(n, numeric_limits<double>::infinity());
+    vector<int> parent(n, -1);
     vector<vector<pair<int, double>>> adj(n);
+
     for (const Edge& edge : instance.edges)
     {
         int u = edge.node1 - 1;
         int v = edge.node2 - 1;
         double w = edge.weight;
-        // Giả sử đồ thị vô hướng
         adj[u].push_back({ v, w });
         adj[v].push_back({ u, w });
     }
 
-    // Hàng đợi ưu tiên chứa các cạnh với cấu trúc: (trọng số, (u, v))
-    typedef pair<double, pair<int, int>> EdgeInfo;
-    priority_queue<EdgeInfo, vector<EdgeInfo>, greater<EdgeInfo>> pq;
+    auto start = chrono::high_resolution_clock::now();
+    key[0] = 0;
+    priority_queue<pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> pq;
+    pq.push({ 0, 0 });
 
-    // Bắt đầu từ đỉnh 0
-    inMST[0] = true;
-    for (const auto& edge : adj[0])
+    while (!pq.empty())
     {
-        pq.push({ edge.second, {0, edge.first} });
-    }
-
-    // Thuật toán Prim
-    while (!pq.empty() && mstree.size() < n - 1)
-    {
-        auto top = pq.top();
+        int u = pq.top().second;
         pq.pop();
-        double weight = top.first;
-        int u = top.second.first;
-        int v = top.second.second;
-        if (inMST[v])
-            continue; // nếu đỉnh đã có trong MST thì bỏ qua
 
-        // Thêm cạnh vào MST (chuyển chỉ số về 1-index)
-        mstree.push_back({ u + 1, v + 1, weight });
-        inMST[v] = true;
+        if (inMST[u]) continue;
+        inMST[u] = true;
 
-        // Thêm các cạnh nối từ đỉnh v vào hàng đợi
-        for (const auto& edge : adj[v])
+        if (parent[u] != -1)
+            mstree.push_back({ parent[u] + 1, u + 1, key[u] });
+
+        for (const auto& edge : adj[u])
         {
-            if (!inMST[edge.first])
+            int v = edge.first;
+            double w = edge.second;
+            if (!inMST[v] && w < key[v])
             {
-                pq.push({ edge.second, {v, edge.first} });
+                parent[v] = u;
+                key[v] = w;
+                pq.push({ key[v], v });
             }
         }
     }
+
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double> duration = end - start;
     runtime = duration.count();
-    total = 0.0;
     for (const Edge& e : mstree)
     {
+        cout << e.node1 << " " << e.node2 << " " << e.weight << endl;
         total += e.weight;
     }
 }
-
 
 void Prim::displaySolution() const
 {
@@ -85,9 +76,7 @@ void Prim::displaySolution() const
         totalWeight += e.weight;
     }
     cout << "Total weight: " << totalWeight << endl;
-    
-    cout << "Prim's algorithm runtime: " << runtime << "s" << endl;
-
+	cout << "runtime" << runtime << "s" << endl;
 }
 
 void Kruskal::solve()
