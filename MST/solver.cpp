@@ -1,4 +1,4 @@
-#include "solver.h"
+﻿#include "solver.h"
 #include <iostream>
 #include <algorithm>
 #include <chrono>
