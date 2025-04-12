@@ -1,4 +1,4 @@
-﻿#include "instance.h"
+#include "instance.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -7,8 +7,8 @@
 
 using namespace std;
 
-static double euclideanDistance(double x1, double y1, double x2, double y2) {
-    return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+static double manhattanDistance(double x1, double y1, double x2, double y2) {
+    return abs(x1 - x2) + abs(y1 - y2);
 }
 
 bool INSTANCE::loadFromfilenetwork(const string& filename)
@@ -46,7 +46,7 @@ bool INSTANCE::loadFromfilenetwork(const string& filename)
     // Tính khoảng cách Euclidean giữa mọi cặp node
     for (size_t i = 0; i < coordinates.size(); i++) {
         for (size_t j = i + 1; j < coordinates.size(); j++) {
-            double weight = euclideanDistance(coordinates[i].first, coordinates[i].second,
+            double weight = manhattanDistance(coordinates[i].first, coordinates[i].second,
                 coordinates[j].first, coordinates[j].second);
             edges.push_back({ nodes[i], nodes[j], weight });
         }
